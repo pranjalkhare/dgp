@@ -1,10 +1,42 @@
-CPP_FILES := $(wildcard src/*.cpp)
-OBJ_FILES := $(addprefix obj/,$(notdir $(CPP_FILES:.cpp=.o)))
-LD_FLAGS := ...
-CC_FLAGS := ...
+#
+# 'make depend' uses makedepend to automatically generate dependencies
+#               (dependencies are added to end of Makefile)
+# 'make'        build executable
+# 'make clean'  removes all .o and executable files
+#
 
-all: $(OBJ_FILES)
-   g++ $(LD_FLAGS) -o $@ $^
+CC := c++
+CFLAGS := -Wall -g2 -O2 -std=c++11 -fno-strict-aliasing -Wno-deprecated
+ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+INCLUDES :=
+LFLAGS :=
+LIBS :=
+# LIBS := -framework OpenGL -framework GLUT -framework Carbon
+SRCS := $(wildcard $(ROOT_DIR)/*.cpp)
+OBJS := $(SRCS:.cpp=.o)
+MAIN := a.out
 
-obj/%.o: src/%.cpp
-   g++ $(CC_FLAGS) -c -o $@ $<
+#
+# The following part of the makefile is generic; it can be used to
+# build any executable just by changing the definitions above and by
+# deleting dependencies appended to the file from 'make depend'
+#
+
+.PHONY: depend clean
+
+all: $(MAIN)
+	@echo  Compilation finished
+
+$(MAIN): $(OBJS)
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
+
+.cpp.o:
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+clean:
+	$(RM) $(OBJS) *~ $(MAIN)
+
+depend: $(SRCS)
+	makedepend $(INCLUDES) $^
+
+# DO NOT DELETE THIS LINE -- make depend needs it
