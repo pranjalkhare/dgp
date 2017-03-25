@@ -1,7 +1,21 @@
+#include <parser.h>
 
 
+int
+usage(int argc, char * argv[])
+{
+  DGP_CONSOLE << "";
+  DGP_CONSOLE << "Usage: " << argv[0] << " [filename] \n";
 
-int main() {
+  return -1;
+}
+
+int
+main(int argc, char * argv[])
+{
+  if (argc < 2)
+    return usage(argc, argv);
+}
 	// take as input grammar file 
 
 	// create parser object
@@ -42,8 +56,6 @@ int main() {
 	*/
 
 	// call render with the queue
-
-}
 
 // class shape {
 // public:
