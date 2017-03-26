@@ -1,3 +1,6 @@
+#ifndef RULE_H
+#define RULE_H
+
 #include "common.hpp"
 using namespace std;
 
@@ -38,3 +41,5 @@ public:
 		// }
 	}
 };
+
+#endif

@@ -1,5 +1,7 @@
 #include "parser.hpp"
-
+#include "modeler.hpp"
+#include "rule.hpp"
+#include "shape.hpp"
 
 int
 usage(int argc, char * argv[])
@@ -16,16 +18,26 @@ main(int argc, char * argv[])
   if (argc < 2)
     return usage(argc, argv);
 
-  vector<Rule> rules;
   string filename(argv[1]);
   Parser parser(filename);
-  rules = parser.parse();
+  Modeler modeler(parser.parse());
 
-	for(int i=0; i<rules.size(); i++) {
-		rules[i].print();
-	}
+  for(int i=0; i<modeler.rules.size(); i++) {
+  	modeler.rules[i].print();
+  }
 
+  Shape root;
+  root.bbox.lo.x = 0;
+  root.bbox.lo.y = 0;
+  root.bbox.lo.z = 0;
+  root.bbox.hi.x = 0;
+  root.bbox.hi.y = 0;
+  root.bbox.hi.z = 0;
+  root.type = modeler.rules[0].lhs;
+  root.rule = modeler.rules[0];
 
+  vector<Renderable> renderables;
+  modeler.getRenderable(renderables, root);
 }
 	// take as input grammar file 
 

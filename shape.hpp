@@ -1,20 +1,14 @@
-#include <rule>
+#ifndef SHAPE_H
+#define SHAPE_H
 
-struct Point {
-	int x, y, z;
-};
+#include "rule.hpp"
 
 class Shape {
 public:
-	Point lo, hi;
+	string type;
+	BBox bbox;
 	Rule rule;
 	vector<Shape> childs;
-
-	void getRenderable(vector<Renderable>& render_vector, vector<Rule> rules) {
-		// Goes through the functions
-		// For every function
-			// check for S/T
-			// 
-	}
-
 };
+
+#endif
