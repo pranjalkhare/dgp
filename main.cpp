@@ -36,8 +36,9 @@ main(int argc, char * argv[])
   root.type = modeler.rules[0].lhs;
   root.rule = modeler.rules[0];
 
-  vector<Renderable> renderables;
+  vector<Renderable*> renderables;
   modeler.getRenderable(renderables, root);
+  cout << "yo" << renderables.size();
 }
 	// take as input grammar file 
 

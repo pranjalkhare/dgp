@@ -11,7 +11,7 @@ public:
 	Modeler(vector<Rule>);
 	bool isRenderable(string& s);
 	int isFunction(string& s);
-	void getRenderable(vector<Renderable>& renderables, Shape& shape);
+	void getRenderable(vector<Renderable*>& renderables, Shape& shape);
 };
 
 #endif

@@ -9,11 +9,15 @@ using namespace std;
 
 struct Point {
 	int x, y, z;
+	// std::ostream &
+	// operator<<(std::ostream & os, VectorN<N, T> const & v)
+	// {
+	//   return os << v.toString();
+	// }
 };
 
 struct BBox {
-	Point lo, hi;	
-	
+	Point lo, hi;
 };
 
 #endif
