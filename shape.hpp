@@ -9,6 +9,8 @@ public:
 	BBox bbox;
 	Rule rule;
 	vector<Shape> childs;
+
+	void print();
 };
 
 #endif

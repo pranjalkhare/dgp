@@ -27,18 +27,18 @@ main(int argc, char * argv[])
   }
 
   Shape root;
-  root.bbox.lo.x = 0;
-  root.bbox.lo.y = 0;
-  root.bbox.lo.z = 0;
-  root.bbox.hi.x = 0;
-  root.bbox.hi.y = 0;
-  root.bbox.hi.z = 0;
+  // root.bbox.lo.x = 0;
+  // root.bbox.lo.y = 0;
+  // root.bbox.lo.z = 0;
+  // root.bbox.hi.x = 0;
+  // root.bbox.hi.y = 0;
+  // root.bbox.hi.z = 0;
   root.type = modeler.rules[0].lhs;
   root.rule = modeler.rules[0];
 
   vector<Renderable*> renderables;
   modeler.getRenderable(renderables, root);
-  cout << "yo" << renderables.size();
+  cout << "Total Renderable Elements: " << renderables.size() << endl;
 }
 	// take as input grammar file 
 
