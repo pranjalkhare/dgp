@@ -11,6 +11,9 @@ vector<Rule> Parser::parse() {
 	
 	fstream fin(filename, ios::in);
 	while(getline(fin, rulestr)) {
+		if(rulestr[0] == '/') {
+			continue;
+		}
 		p.push_back(getRule(rulestr));
 	}
 	return p;
@@ -36,6 +39,7 @@ Rule Parser::getRule(string rulestr) {
 
 void Parser::pushFunction(Rule& rule, string funstr) {
 	int pos = funstr.find("("), next;
+	cout << "!!" << funstr << endl;
 
 	if(pos == -1) {
 		rule.functions.push_back("C");
@@ -53,7 +57,7 @@ void Parser::pushFunction(Rule& rule, string funstr) {
 	next = funstr.find(")");
 	if(pos != next) {
 		int temp = funstr.find(",", pos);
-		while(temp!=-1) {
+		while(temp!=-1 && temp < next) {
 			params.push_back(funstr.substr(pos, temp-pos));
 			pos = temp+1;
 			temp = funstr.find(",", pos);

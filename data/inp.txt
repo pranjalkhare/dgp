@@ -1,1 +1,5 @@
+// lhs -> functions and children
+// space between every function/child
+// No space inside function
+// // for comment
 footprint -> T(55,33,456) S(5,5,10) floors T(0,0,10) S(5,5,3) roof
