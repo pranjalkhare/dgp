@@ -9,10 +9,10 @@ CC := c++
 CFLAGS := -Wall -g2 -O2 -std=c++11 -fno-strict-aliasing -Wno-deprecated
 ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 INCLUDES :=
-LFLAGS :=
-LIBS :=
-# LIBS := -framework OpenGL -framework GLUT -framework Carbon
-SRCS := $(wildcard $(ROOT_DIR)/*.cpp)
+LFLAGS := 
+# LIBS :=
+LIBS := -framework OpenGL -framework GLUT -framework Carbon
+SRCS := $(wildcard $(ROOT_DIR)/DGP/*.cpp) $(wildcard $(ROOT_DIR)/*.cpp)
 OBJS := $(SRCS:.cpp=.o)
 MAIN := a.out
 
