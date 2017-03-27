@@ -27,12 +27,6 @@ main(int argc, char * argv[])
   }
 
   Shape root;
-  // root.bbox.lo.x = 0;
-  // root.bbox.lo.y = 0;
-  // root.bbox.lo.z = 0;
-  // root.bbox.hi.x = 0;
-  // root.bbox.hi.y = 0;
-  // root.bbox.hi.z = 0;
   root.type = modeler.rules[0].lhs;
   root.rule = modeler.rules[0];
   root.transform.fill(0);
@@ -40,6 +34,7 @@ main(int argc, char * argv[])
   root.transform.set(1,1,1);
   root.transform.set(2,2,1);
   root.transform.set(3,3,1);
+  // cout << root.transform;
 
   vector<Renderable*> renderables;
   modeler.getRenderable(renderables, root);
