@@ -22,7 +22,7 @@ int Modeler::getRule(string& s) {
 	return -1;
 }
 
-void Modeler::createChild(string& label, BBox& bbox, Shape& shape) {
+void Modeler::createChild(string& label, AxisAlignedBox3& bbox, Shape& shape) {
 	Shape node;
 	node.bbox = bbox;
 	node.type = label;
@@ -38,18 +38,18 @@ void Modeler::createChild(string& label, BBox& bbox, Shape& shape) {
 }
 
 void Modeler::Comp(Rule& rule, int index, Shape& shape) {
-	BBox temp;
+	AxisAlignedBox3 temp;
 	temp = shape.bbox;
-	temp.hi.p[1] = temp.lo.p[1];
+	temp.getHigh()[1] = temp.getLow()[1];
 	createChild(rule.childs[index][0],temp,shape);
 	temp = shape.bbox;
-	temp.hi.p[0] = temp.lo.p[0];
+	temp.getHigh()[0] = temp.getLow()[0];
 	createChild(rule.childs[index][1],temp,shape);
 	temp = shape.bbox;
-	temp.lo.p[1] = temp.hi.p[1];
+	temp.getLow()[1] = temp.getHigh()[1];
 	createChild(rule.childs[index][2],temp,shape);
 	temp = shape.bbox;
-	temp.lo.p[0] = temp.hi.p[0];
+	temp.getLow()[0] = temp.getHigh()[0];
 	createChild(rule.childs[index][3],temp,shape);
 	cout<<"Comp Completed"<<endl;
 }
@@ -72,13 +72,13 @@ void Modeler::SubDiv(Rule& rule, int index, Shape& shape) {
 	}
 	if(total==0)
 		total=1;
-	BBox bbox = shape.bbox;
-	double share = (bbox.hi.p[ind]-bbox.lo.p[ind])/total;
-	bbox.hi.p[ind] = bbox.lo.p[ind];
+	AxisAlignedBox3 bbox = shape.bbox;
+	double share = (bbox.getHigh()[ind]-bbox.getLow()[ind])/total;
+	bbox.getHigh()[ind] = bbox.getLow()[ind];
 	for(int i=0;i<rule.childs[index].size();++i) {
-		bbox.hi.p[ind] += share*stod(rule.params[index][i+1]);
+		bbox.getHigh()[ind] += share*stod(rule.params[index][i+1]);
 		createChild(rule.childs[index][i],bbox,shape);
-		bbox.lo = bbox.hi;
+		bbox.getLow() = bbox.getHigh();
 	}
 	cout<<"SubDiv Completed"<<endl;
 }
@@ -96,22 +96,26 @@ void Modeler::Repeat(Rule& rule, int index, Shape& shape) {
 		ind = 1;
 	else if(rule.params[index][0] == "Z")
 		ind = 2;
-	BBox bbox = shape.bbox;
+	else {
+		cerr << "Incorrect dimension specified" << endl;
+		exit(1);
+	}
+	AxisAlignedBox3 bbox = shape.bbox;
 	double s = stod(rule.params[index][1]);
-	int num = (bbox.hi.p[ind]-bbox.lo.p[ind])/s;
+	int num = (bbox.getHigh()[ind]-bbox.getLow()[ind])/s;
 	double share;
 	if(num==0){
-		share = (bbox.hi.p[ind]-bbox.lo.p[ind]);
+		share = (bbox.getHigh()[ind]-bbox.getLow()[ind]);
 		num=1;
 	}
 	else
-		share = s + fmod((bbox.hi.p[ind]-bbox.lo.p[ind]),s)/((double)num);
-	bbox.hi.p[ind] = bbox.lo.p[ind];
+		share = s + fmod((bbox.getHigh()[ind]-bbox.getLow()[ind]),s)/((double)num);
+	bbox.getHigh()[ind] = bbox.getLow()[ind];
 	cout<<num<<endl;
 	for(int i=0;i<num;++i) {
-		bbox.hi.p[ind] += share;
+		bbox.getHigh()[ind] += share;
 		createChild(rule.childs[index][0],bbox,shape);
-		bbox.lo = bbox.hi;
+		bbox.getLow() = bbox.getHigh();
 	}
 	cout<<"Repeat Completed"<<endl;
 }
@@ -129,25 +133,25 @@ void Modeler::getRenderable(vector<Renderable*>& renderables, Shape& shape) {
 		cout<<endl;
 		cout<<"*********************Node Done*******************************"<<endl;
 		cout<<endl;
-		BBox bbox; // To be set accordingly
+		AxisAlignedBox3 bbox; // To be set accordingly
 		renderables.push_back(Renderable::generateRenderable(shape.type, bbox));
 		return;
 	}
 	Rule &rule = shape.rule;
-	int index;
-	Point stack;
-	BBox stackbox;
+	// int index;
+	Vector3 stack;
+	AxisAlignedBox3 stackbox;
 	for(int i=0; i<rule.functions.size(); i++) {
 		cout << "i=" << i << " ";
 		cout << "function=" << rule.functions[i] << endl;
 		if(rule.functions[i] == "S") {
-			stackbox = BBox(stack, Point(stack.p[0]+stod(rule.params[i][0]),stack.p[1]+stod(rule.params[i][1]),stack.p[2]+stod(rule.params[i][2])));
+			stackbox = AxisAlignedBox3(stack, Vector3(stack[0]+stod(rule.params[i][0]),stack[1]+stod(rule.params[i][1]),stack[2]+stod(rule.params[i][2])));
 		} else if(rule.functions[i] == "T") {
-			stack.p[0] += stod(rule.params[i][0]);
-			stack.p[1] += stod(rule.params[i][1]);
-			stack.p[2] += stod(rule.params[i][2]);
+			stack[0] += stod(rule.params[i][0]);
+			stack[1] += stod(rule.params[i][1]);
+			stack[2] += stod(rule.params[i][2]);
 		} else if(rule.functions[i] == "C") {
-			BBox bbox = stackbox; // execute stack and set
+			AxisAlignedBox3 bbox = stackbox; // execute stack and set
 			for(int j=0;j<rule.childs[i].size();++j) {
 				createChild(rule.childs[i][j],bbox,shape);
 			}

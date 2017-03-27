@@ -39,7 +39,6 @@ Rule Parser::getRule(string rulestr) {
 
 void Parser::pushFunction(Rule& rule, string funstr) {
 	int pos = funstr.find("("), next;
-	cout << "!!" << funstr << endl;
 
 	if(pos == -1) {
 		rule.functions.push_back("C");

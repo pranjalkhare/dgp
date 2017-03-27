@@ -2,11 +2,13 @@
 #define SHAPE_H
 
 #include "rule.hpp"
+#include "common.hpp"
+#include "DGP/AxisAlignedBox3.hpp"
 
 class Shape {
 public:
 	string type;
-	BBox bbox;
+	AxisAlignedBox3 bbox;
 	Rule rule;
 	vector<Shape> childs;
 

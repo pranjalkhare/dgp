@@ -2,38 +2,39 @@
 #define RENDERABLE_H
 
 #include "common.hpp"
+#include "DGP/AxisAlignedBox3.hpp"
 
 extern vector<string> renderableList;
 
 class Renderable {
 public:
-	BBox bbox;
+	AxisAlignedBox3 bbox;
 
-	static Renderable* generateRenderable(string&, BBox);
+	static Renderable* generateRenderable(string&, AxisAlignedBox3);
 	virtual void print()=0;
 };
 
 class Roof : public Renderable {
 public:
-	Roof(BBox);
+	Roof(AxisAlignedBox3);
 	void print();
 };
 
 class Wall : public Renderable {
 public:
-	Wall(BBox);
+	Wall(AxisAlignedBox3);
 	void print();
 };
 
 class Window : public Renderable {
 public:
-	Window(BBox);
+	Window(AxisAlignedBox3);
 	void print();
 };
 
 class Door : public Renderable {
 public:
-	Door(BBox);
+	Door(AxisAlignedBox3);
 	void print();
 };
 

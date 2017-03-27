@@ -15,15 +15,15 @@ public:
 		cout << "lhs= " << lhs << endl;
 
 		for(int i=0; i<functions.size(); i++) {
-			cout << functions[i] << endl;
-			cout << "params: " << params[i].size() << endl;
+			cout << "\t" << functions[i] << endl;
+			cout << "\t" << "params: " << params[i].size() << endl;
 			for(int j=0; j<params[i].size(); j++) {
-				cout << j << "-> " << params[i][j] << endl;
+				cout << "\t\t" << j << "-> " << params[i][j] << endl;
 			}	
-			cout << "childs: " << childs[i].size() << endl;
+			cout << "\t" << "childs: " << childs[i].size() << endl;
 			for(int j=0; j<childs[i].size(); j++) {
-				cout << j << "-> " << childs[i][j] << endl;
-			}	
+				cout << "\t\t" << j << "-> " << childs[i][j] << endl;
+			}
 		}
 		// cout << "params: " << endl;
 		// for(int i=1; i<=params.size(); i++) {
