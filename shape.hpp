@@ -9,6 +9,7 @@ class Shape {
 public:
 	string type;
 	AxisAlignedBox3 bbox;
+	Matrix4 transform;
 	Rule rule;
 	vector<Shape> childs;
 

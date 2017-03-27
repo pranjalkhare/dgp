@@ -35,6 +35,11 @@ main(int argc, char * argv[])
   // root.bbox.hi.z = 0;
   root.type = modeler.rules[0].lhs;
   root.rule = modeler.rules[0];
+  root.transform.fill(0);
+  root.transform.set(0,0,1);
+  root.transform.set(1,1,1);
+  root.transform.set(2,2,1);
+  root.transform.set(3,3,1);
 
   vector<Renderable*> renderables;
   modeler.getRenderable(renderables, root);

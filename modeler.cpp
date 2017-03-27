@@ -22,10 +22,21 @@ int Modeler::getRule(string& s) {
 	return -1;
 }
 
-void Modeler::createChild(string& label, AxisAlignedBox3& bbox, Shape& shape) {
+void Modeler::createChild(string& label, AxisAlignedBox3& bbox, Shape& shape, bool flip) {
 	Shape node;
 	node.bbox = bbox;
 	node.type = label;
+	node.bbox.getLow() = node.bbox.getLow()-bbox.getLow();
+	node.bbox.getHigh() = node.bbox.getHigh()-bbox.getLow();
+	Matrix3 eye(1,0,0, 0,1,0, 0,0,1);
+	Matrix3 rot(0,0,0, 1,0,0, 0,1,0);
+	if(flip) {
+		eye = rot;
+	}
+
+	Matrix4 transform(eye, bbox.getLow());
+	node.transform = shape.transform*transform;
+
 	int index;
 	if((index = getRule(label)) >= 0)
 		node.rule = rules[index];
@@ -37,6 +48,10 @@ void Modeler::createChild(string& label, AxisAlignedBox3& bbox, Shape& shape) {
 	cout<<"Child created"<<endl;
 }
 
+void Modeler::createChild(string& label, AxisAlignedBox3& bbox, Shape& shape) {
+	createChild(label, bbox, shape, false);
+}
+
 void Modeler::Comp(Rule& rule, int index, Shape& shape) {
 	AxisAlignedBox3 temp;
 	temp = shape.bbox;
@@ -44,13 +59,13 @@ void Modeler::Comp(Rule& rule, int index, Shape& shape) {
 	createChild(rule.childs[index][0],temp,shape);
 	temp = shape.bbox;
 	temp.getHigh()[0] = temp.getLow()[0];
-	createChild(rule.childs[index][1],temp,shape);
+	createChild(rule.childs[index][1],temp,shape,true);
 	temp = shape.bbox;
 	temp.getLow()[1] = temp.getHigh()[1];
 	createChild(rule.childs[index][2],temp,shape);
 	temp = shape.bbox;
 	temp.getLow()[0] = temp.getHigh()[0];
-	createChild(rule.childs[index][3],temp,shape);
+	createChild(rule.childs[index][3],temp,shape,true);
 	cout<<"Comp Completed"<<endl;
 }
 
@@ -139,7 +154,7 @@ void Modeler::getRenderable(vector<Renderable*>& renderables, Shape& shape) {
 	}
 	Rule &rule = shape.rule;
 	// int index;
-	Vector3 stack;
+	Vector3 stack = {0,0,0};
 	AxisAlignedBox3 stackbox;
 	for(int i=0; i<rule.functions.size(); i++) {
 		cout << "i=" << i << " ";
