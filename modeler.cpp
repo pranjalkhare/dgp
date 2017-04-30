@@ -96,7 +96,7 @@ void Modeler::SubDiv(Rule& rule, int index, Shape& shape) {
 		cerr << "number of params does not match number of children in rule" << endl;
 		exit(0);
 	}
-	int ind;
+	int ind=0;
 	if(rule.params[index][0] == "X")
 		ind = 0;
 	else if(rule.params[index][0] == "Y")
@@ -104,18 +104,36 @@ void Modeler::SubDiv(Rule& rule, int index, Shape& shape) {
 	else if(rule.params[index][0] == "Z")
 		ind = 2;
 	double total=0;
+	AxisAlignedBox3 bbox = shape.bbox;
+	double top = bbox.getHigh()[ind];
+	double tlen = (bbox.getHigh()[ind]-bbox.getLow()[ind]);
 	for(int i=1;i<rule.params[index].size();++i){
-		total += stod(rule.params[index][i]);
+		if(rule.params[index][i][rule.params[index][i].size()-1] == 'r')
+			total += stod(rule.params[index][i].substr(0,rule.params[index][i].size()-1));
+		else
+			tlen -= stod(rule.params[index][i]);
 	}
 	if(total==0)
 		total=1;
-	AxisAlignedBox3 bbox = shape.bbox;
-	double share = (bbox.getHigh()[ind]-bbox.getLow()[ind])/total;
+	if(tlen<0)
+		tlen=0;
+	double share = tlen/total;
 	bbox.getHigh()[ind] = bbox.getLow()[ind];
 	for(int i=0;i<rule.childs[index].size();++i) {
-		bbox.getHigh()[ind] += share*stod(rule.params[index][i+1]);
-		createChild(rule.childs[index][i],bbox,shape);
+		if(rule.params[index][i+1][rule.params[index][i+1].size()-1] == 'r'){
+			bbox.getHigh()[ind] += share*stod(rule.params[index][i+1].substr(0,rule.params[index][i+1].size()-1));
+			createChild(rule.childs[index][i],bbox,shape);
+		}
+		else{
+			bbox.getHigh()[ind] += stod(rule.params[index][i+1]);
+			createChild(rule.childs[index][i],bbox,shape);
+		}
 		bbox.getLow()[ind] = bbox.getHigh()[ind];
+	}
+	if(bbox.getLow()[ind] != top){
+		bbox.getHigh()[ind] = top;
+		string ss = "wall";
+		createChild(ss,bbox,shape);
 	}
 	cout<<"SubDiv Completed"<<endl;
 }
@@ -126,7 +144,7 @@ void Modeler::Repeat(Rule& rule, int index, Shape& shape) {
 		cerr << "usage: Repeat(dimension,size){label}" << endl;
 		exit(0); 
 	}
-	int ind;
+	int ind=0;
 	if(rule.params[index][0] == "X")
 		ind = 0;
 	else if(rule.params[index][0] == "Y")
@@ -138,16 +156,24 @@ void Modeler::Repeat(Rule& rule, int index, Shape& shape) {
 		exit(1);
 	}
 	AxisAlignedBox3 bbox = shape.bbox;
-	double s = stod(rule.params[index][1]);
+	double s=0;
+	if(rule.params[index][1][rule.params[index][1].size()-1] != 'r')
+		s = stod(rule.params[index][1]);
+	else
+		s = stod(rule.params[index][1].substr(0,rule.params[index][1].size()-1));
 	int num = (bbox.getHigh()[ind]-bbox.getLow()[ind])/s;
 	double top = bbox.getHigh()[ind];
 	double share;
 	if(num==0){
 		share = (bbox.getHigh()[ind]-bbox.getLow()[ind]);
-		num=1;
+		// num=0;
 	}
-	else
-		share = s;
+	else{
+		if(rule.params[index][1][rule.params[index][1].size()-1] == 'r')
+			share = s + fmod((bbox.getHigh()[ind]-bbox.getLow()[ind]),s)/((double)num);
+		else
+			share = s;
+	}
 	bbox.getHigh()[ind] = bbox.getLow()[ind];
 	cout<<num<<endl;
 	for(int i=0;i<num;++i) {
@@ -155,47 +181,30 @@ void Modeler::Repeat(Rule& rule, int index, Shape& shape) {
 		createChild(rule.childs[index][0],bbox,shape);
 		bbox.getLow()[ind] = bbox.getHigh()[ind];
 	}
-	bbox.getHigh()[ind] = top;
-	string ss = "wall";
-	createChild(ss,bbox,shape);
+	if(bbox.getLow()[ind] != top){
+		bbox.getHigh()[ind] = top;
+		string ss = "wall";
+		createChild(ss,bbox,shape);
+	}
 	cout<<"Repeat Completed"<<endl;
 }
 
-void Modeler::RepeatAbs(Rule& rule, int index, Shape& shape) {
-	if(rule.params[index].size() != 2 || rule.childs[index].size() != 1) {
-		cerr << "improper format of RepeatAbs function." << endl;
-		cerr << "usage: RepeatAbs(dimension,size){label}" << endl;
-		exit(0); 
+void Modeler::MSB(Rule& rule, int index, Shape& shape, AxisAlignedBox3 msb_bbox) {
+	for(int i=0;i<rule.childs[index].size();++i){
+		AxisAlignedBox3 bbox = msb_bbox;
+		int l,b,h;
+		l = 4 + fmod(rand(),(msb_bbox.getHigh()[0]-msb_bbox.getLow()[0]-4));
+		b = 4 + fmod(rand(),(msb_bbox.getHigh()[1]-msb_bbox.getLow()[1]-4));
+		cout << (msb_bbox.getHigh()) << endl << msb_bbox.getLow()<<endl <<"ser";
+		h = 7 + fmod(rand(),(msb_bbox.getHigh()[2]-msb_bbox.getLow()[2]-7));
+		bbox.getLow()[0] = msb_bbox.getLow()[0] + fmod(rand(),(msb_bbox.getHigh()[0]-msb_bbox.getLow()[0]-l));
+		bbox.getHigh()[0] = bbox.getLow()[0] + l;
+		bbox.getLow()[1] = msb_bbox.getLow()[1] + fmod(rand(),(msb_bbox.getHigh()[1]-msb_bbox.getLow()[1]-b));
+		bbox.getHigh()[1] = bbox.getLow()[1] + b;
+		bbox.getLow()[2] = msb_bbox.getLow()[2];
+		bbox.getHigh()[2] = bbox.getLow()[2] + h;
+		createChild(rule.childs[index][i],bbox,shape);
 	}
-	int ind;
-	if(rule.params[index][0] == "X")
-		ind = 0;
-	else if(rule.params[index][0] == "Y")
-		ind = 1;
-	else if(rule.params[index][0] == "Z")
-		ind = 2;
-	else {
-		cerr << "Incorrect dimension specified" << endl;
-		exit(1);
-	}
-	AxisAlignedBox3 bbox = shape.bbox;
-	double s = stod(rule.params[index][1]);
-	int num = (bbox.getHigh()[ind]-bbox.getLow()[ind])/s;
-	double share;
-	if(num==0){
-		share = (bbox.getHigh()[ind]-bbox.getLow()[ind]);
-		num=1;
-	}
-	else
-		share = s + fmod((bbox.getHigh()[ind]-bbox.getLow()[ind]),s)/((double)num);
-	bbox.getHigh()[ind] = bbox.getLow()[ind];
-	cout<<num<<endl;
-	for(int i=0;i<num;++i) {
-		bbox.getHigh()[ind] += share;
-		createChild(rule.childs[index][0],bbox,shape);
-		bbox.getLow()[ind] = bbox.getHigh()[ind];
-	}
-	cout<<"RepeatAbs Completed"<<endl;
 }
 
 void Modeler::getRenderable(vector<Renderable*>& renderables, Shape& shape) {
@@ -240,6 +249,8 @@ void Modeler::getRenderable(vector<Renderable*>& renderables, Shape& shape) {
 			SubDiv(rule,i,shape);
 		} else if(rule.functions[i] == "Repeat") {
 			Repeat(rule,i,shape);
+		} else if(rule.functions[i] == "MSB") {
+			MSB(rule,i,shape,stackbox);
 		} else {
 			cerr << "unknown function: " << rule.functions[i] << endl;
 			exit(0);

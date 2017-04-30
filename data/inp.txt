@@ -2,14 +2,15 @@
 // space between every function/child
 // No space inside function
 // // for comment
-footprint -> T(55,33,456) S(5,5,9) building T(0,0,9) S(5,5,3) roof
-building -> Comp(){facade,floors,floors,floors}
-facade -> SubDiv(Z,2,8){dfloor,floors}
-dfloor -> SubDiv(X,1,2,2){tiles,entrance,tiles}
-entrance -> SubDiv(X,1,2,1){wall,doorspace,wall}
-doorspace -> SubDiv(Z,2,1){door,wall}
-floors -> Repeat(Z,2){tiles}:1
-floors -> Repeat(Z,4){tiles}:2
-tiles -> Repeat(X,1){tile}
-tile -> SubDiv(X,1,2,1){wall,windowspace,wall}
-windowspace -> SubDiv(Z,1,2,1){wall,window,wall}
+footprint -> T(55,33,456) S(20,5,20) build
+build -> SubDiv(Z,1r,3){building,roof}
+building -> Comp(){dfacade,facade,facade,facade}
+dfacade -> SubDiv(Z,4,8r){dfloor,floors}
+facade -> SubDiv(Z,4,8r){tiles,floors}
+dfloor -> SubDiv(X,1r,2,2r){tiles,entrance,tiles}
+entrance -> SubDiv(X,1r,1,1r){wall,doorspace,wall}
+doorspace -> SubDiv(Z,2,1r){door,wall}
+floors -> Repeat(Z,4){tiles}
+tiles -> Repeat(X,2r){tile}
+tile -> SubDiv(X,1r,1.2,1r){wall,windowspace,wall}
+windowspace -> SubDiv(Z,1r,1,2r){wall,window,wall}

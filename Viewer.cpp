@@ -92,7 +92,9 @@ Viewer::fitCameraToObject()
   }
 
   AxisAlignedBox3  & bbox = root->bbox;
-  bbox.set(Vector3(54, 32, 455),Vector3(61, 39, 470));
+  cout << root->bbox.getLow() << "DSFS";
+  cout << root->bbox.getHigh() << "DSFS";
+  // bbox.set(Vector3(54, 32, 455),Vector3(61, 39, 470));
   
   camera_look_at = bbox.getCenter();
   Real scale = bbox.getExtent().length();

@@ -50,7 +50,7 @@ void Parser::getRule(string rulestr, Rule &rule) {
 	while(pos < pos2) {
 		next = rulestr.find(" ", pos);
 		if(next == -1) {
-			next = rulestr.size();
+			next = pos2;
 		}
 		pushFunction(rule, rulestr.substr(pos, next-pos));
 		pos = next+1;

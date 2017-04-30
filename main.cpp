@@ -43,6 +43,11 @@ main(int argc, char * argv[])
 
   vector<Renderable*> renderables;
   modeler.getRenderable(renderables, root);
+  for(auto i:root.childs) {
+    root.bbox.merge(i.transform*i.bbox.getLow());
+    root.bbox.merge(i.transform*i.bbox.getHigh());
+  }
+  root.print();
   cout << "Total Renderable Elements: " << renderables.size() << endl;
 
   Viewer viewer;

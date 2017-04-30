@@ -18,8 +18,8 @@ public:
 	void createChild(string& label, AxisAlignedBox3 &bbox, Shape& shape);
 	void Comp(Rule& rule, int index, Shape& shape);
 	void SubDiv(Rule& rule, int index, Shape& shape);
-	void RepeatAbs(Rule& rule, int index, Shape& shape);
 	void Repeat(Rule& rule, int index, Shape& shape);
+	void MSB(Rule& rule, int index, Shape& shape, AxisAlignedBox3);
 };
 
 #endif
