@@ -149,6 +149,7 @@ void Modeler::getRenderable(vector<Renderable*>& renderables, Shape& shape) {
 		cout<<"*********************Node Done*******************************"<<endl;
 		cout<<endl;
 		AxisAlignedBox3 bbox; // To be set accordingly
+		bbox.set(shape.transform*shape.bbox.getLow(), shape.transform*shape.bbox.getHigh());
 		renderables.push_back(Renderable::generateRenderable(shape.type, bbox));
 		return;
 	}

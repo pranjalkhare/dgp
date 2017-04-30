@@ -3,6 +3,8 @@
 
 #include "common.hpp"
 #include "DGP/AxisAlignedBox3.hpp"
+#include "DGP/Graphics/RenderSystem.hpp"
+
 
 extern vector<string> renderableList;
 
@@ -12,30 +14,36 @@ public:
 
 	static Renderable* generateRenderable(string&, AxisAlignedBox3);
 	virtual void print()=0;
+	virtual void draw(Graphics::RenderSystem & rs, ColorRGBA const & plane_color = ColorRGB(1.0, 1.0, 1.0))  = 0;
+
 };
 
 class Roof : public Renderable {
 public:
 	Roof(AxisAlignedBox3);
 	void print();
+	void draw(Graphics::RenderSystem & rs, ColorRGBA const & plane_color = ColorRGB(1.0, 0.0, 0.0)) ;
 };
 
 class Wall : public Renderable {
 public:
 	Wall(AxisAlignedBox3);
 	void print();
+	void draw(Graphics::RenderSystem & rs, ColorRGBA const & plane_color = ColorRGB(1.0, 1.0, 1.0)) ;
 };
 
-class Window : public Renderable {
+class Win : public Renderable {
 public:
-	Window(AxisAlignedBox3);
+	Win(AxisAlignedBox3);
 	void print();
+	void draw(Graphics::RenderSystem & rs, ColorRGBA const & plane_color = ColorRGB(0.0, 0.0, 1.0)) ;
 };
 
 class Door : public Renderable {
 public:
 	Door(AxisAlignedBox3);
 	void print();
+	void draw(Graphics::RenderSystem & rs, ColorRGBA const & plane_color = ColorRGB(0.0, 1.0, 0.0)) ;
 };
 
 

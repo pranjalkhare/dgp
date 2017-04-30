@@ -2,6 +2,8 @@
 #include "modeler.hpp"
 #include "rule.hpp"
 #include "shape.hpp"
+#include "Viewer.hpp"
+
 
 int
 usage(int argc, char * argv[])
@@ -39,6 +41,11 @@ main(int argc, char * argv[])
   vector<Renderable*> renderables;
   modeler.getRenderable(renderables, root);
   cout << "Total Renderable Elements: " << renderables.size() << endl;
+
+  Viewer viewer;
+  viewer.setObject(&root);
+  viewer.setRenderables(renderables);
+  viewer.launch(argc, argv);
 }
 	// take as input grammar file 
 
