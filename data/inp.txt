@@ -12,5 +12,6 @@ entrance -> SubDiv(X,1r,1,1r){wall,doorspace,wall}
 doorspace -> SubDiv(Z,2,1r){door,wall}
 floors -> Repeat(Z,4){tiles}
 tiles -> Repeat(X,2r){tile}
-tile -> SubDiv(X,1r,1.2,1r){wall,windowspace,wall}
+tile -> SubDiv(X,1r,1.2,1r){wall,windowspace,wall}:1
+// tile -> SubDiv(X,1r){wall}:1
 windowspace -> SubDiv(Z,1r,1,2r){wall,window,wall}
