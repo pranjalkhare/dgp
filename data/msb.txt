@@ -2,8 +2,11 @@
 // space between every function/child
 // No space inside function
 // // for comment
-footprint -> T(33,44,5535) S(20,20,40) MSB(){build,build,build,build,build}
-build -> SubDiv(Z,1r,3){building,roof}
+footprint -> T(33,44,5535) S(20,20,40) MSB(){build,build,build,build,build}:1
+footprint -> T(33,44,5535) S(20,20,40) MSB(){build,build,build,build}:1
+footprint -> T(33,44,5535) S(20,20,40) MSB(){build,build,build}:1
+footprint -> T(33,44,5535) S(20,20,40) MSB(){build,build}:1
+build -> SubDiv(Z,0,1r,3){wall,building,roof}
 building -> Comp(){dfacade,facade,facade,facade}
 dfacade -> SubDiv(Z,4,8r){dfloor,floors}
 facade -> SubDiv(Z,4,8r){tiles,floors}

@@ -32,8 +32,8 @@ main(int argc, char * argv[])
   // }
 
   Shape root;
-  root.rule = modeler.rules["footprint"].rules[0].first;
   root.type = "footprint";
+  root.rule = modeler.getRule(root.type);
   root.transform.fill(0);
   root.transform.set(0,0,1);
   root.transform.set(1,1,1);

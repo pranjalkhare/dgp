@@ -3,7 +3,7 @@
 // No space inside function
 // // for comment
 footprint -> T(55,33,456) S(20,5,20) build
-build -> SubDiv(Z,1r,3){building,roof}
+build -> SubDiv(Z,0,1r,3){wall,building,roof}
 building -> Comp(){dfacade,facade,facade,facade}
 dfacade -> SubDiv(Z,4,8r){dfloor,floors}
 facade -> SubDiv(Z,4,8r){tiles,floors}
