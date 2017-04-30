@@ -143,7 +143,8 @@ void Modeler::Repeat(Rule& rule, int index, Shape& shape) {
 		bbox.getLow()[ind] = bbox.getHigh()[ind];
 	}
 	bbox.getHigh()[ind] = top;
-	createChild("wall",bbox,shape)
+	string ss = "wall";
+	createChild(ss,bbox,shape);
 	cout<<"Repeat Completed"<<endl;
 }
 

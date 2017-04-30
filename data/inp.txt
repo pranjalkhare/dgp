@@ -2,7 +2,7 @@
 // space between every function/child
 // No space inside function
 // // for comment
-footprint -> T(55,33,456) S(5,5,10) building T(0,0,10) S(5,5,3) roof
+footprint -> T(55,33,456) S(5,5,9) building T(0,0,9) S(5,5,3) roof
 building -> Comp(){facade,floors,floors,floors}
 facade -> SubDiv(Z,2,8){dfloor,floors}
 dfloor -> SubDiv(X,1,2,2){tiles,entrance,tiles}
