@@ -1,0 +1,16 @@
+// lhs -> functions and children
+// space between every function/child
+// No space inside function
+// // for comment
+footprint -> T(33,44,5535) S(20,20,40) MSB(){build,build,build,build,build}
+build -> SubDiv(Z,1r,3){building,roof}
+building -> Comp(){dfacade,facade,facade,facade}
+dfacade -> SubDiv(Z,4,8r){dfloor,floors}
+facade -> SubDiv(Z,4,8r){tiles,floors}
+dfloor -> SubDiv(X,1r,2,2r){tiles,entrance,tiles}
+entrance -> SubDiv(X,1r,1,1r){wall,doorspace,wall}
+doorspace -> SubDiv(Z,2,1r){door,wall}
+floors -> Repeat(Z,4){tiles}
+tiles -> Repeat(X,2r){tile}
+tile -> SubDiv(X,1r,1.2,1r){wall,windowspace,wall}
+windowspace -> SubDiv(Z,1r,1,2r){wall,window,wall}
