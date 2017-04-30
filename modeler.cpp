@@ -1,7 +1,8 @@
 #include "modeler.hpp"
+#include <time.h>
 
-Modeler::Modeler(vector<Rule> rules1) {
-	rules = rules1;
+Modeler::Modeler(map<string, RuleSet> rules_) {
+	rules = rules_;
 }
 
 bool Modeler::isRenderable(string& s) {
@@ -13,16 +14,28 @@ bool Modeler::isRenderable(string& s) {
 	return false;
 }
 
-int Modeler::getRule(string& s) {
-	for(int i=0; i<rules.size(); i++) {
-		if(rules[i].lhs == s) {
-			return i;
+Rule Modeler::getRule(string& s) {
+	
+	
+
+	if(rules.find(s)!=rules.end()){
+		// return rules[s].rules[0].first;
+		RuleSet rs = rules[s];
+		double x=rand()%100 * rs.total_weight/100.0;
+		double count=0;
+		for(int i=0;i<rs.rules.size();i++){
+			count+=rs.rules[i].second;
+			if(count>=x)return rs.rules[i].first;
 		}
+		return rs.rules[0].first;
+
 	}
-	return -1;
+	Rule rule;
+	return rule;
 }
 
 void Modeler::createChild(string& label, AxisAlignedBox3& bbox, Shape& shape, bool flip) {
+	cout<<"Creating "<<label<<endl;
 	Shape node;
 	node.bbox = bbox;
 	node.type = label;
@@ -46,9 +59,9 @@ void Modeler::createChild(string& label, AxisAlignedBox3& bbox, Shape& shape, bo
 	Matrix4 transform(eye, bbox.getLow());
 	node.transform = shape.transform*transform;
 
-	int index;
-	if((index = getRule(label)) >= 0)
-		node.rule = rules[index];
+	// int index;
+	if(getRule(label).lhs.size()>0)
+		node.rule = getRule(label);
 	else if(!isRenderable(label)){
 		cerr << "no rule to expand label \"" << label << "\"" << endl;
 		exit(0);

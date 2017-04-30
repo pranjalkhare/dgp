@@ -5,27 +5,49 @@ Parser::Parser(string& fname) {
 	filename = fname;
 }
 
-vector<Rule> Parser::parse() {
+void Parser::parse(map<string, RuleSet> &rules) {
 	string rulestr;
-	vector<Rule> p;
+	// vector<Rule> p;
 	
 	fstream fin(filename, ios::in);
 	while(getline(fin, rulestr)) {
 		if(rulestr[0] == '/') {
 			continue;
 		}
-		p.push_back(getRule(rulestr));
+
+		// if(rules.find(rulestr!=rules.end())
+		// rules[l]
+		Rule rule;
+		cout<<rulestr<<endl;
+		getRule(rulestr, rule);
+		cout<<rulestr<<endl;
+		if(rules.find(rule.lhs)==rules.end()){
+			RuleSet rs;
+			rs.rules = vector<pair<Rule, double> >(1,pair<Rule, double>(rule,rule.weight));
+			rs.lhs = rule.lhs;
+			rs.total_weight = rule.weight;
+			rules[rule.lhs] = rs;
+		}
+		else{
+			rules[rule.lhs].rules.push_back(pair<Rule, double>(rule, rule.weight));
+			rules[rule.lhs].total_weight+=rule.weight;
+		}	
 	}
-	return p;
 }
 
-Rule Parser::getRule(string rulestr) {
-	Rule rule;
+void Parser::getRule(string rulestr, Rule &rule) {
 	int pos = rulestr.find(" ->"), next;
 	rule.lhs = rulestr.substr(0, pos);
 	pos += 4;
-
-	while(pos < rulestr.size()) {
+	int pos2 = rulestr.find(":");
+	if(pos2==-1) {
+		pos2=rulestr.size();
+		rule.weight =1;
+	}
+	else{
+		rule.weight = stod(rulestr.substr(pos2+1,rulestr.size()-pos2-1));
+	}
+	while(pos < pos2) {
 		next = rulestr.find(" ", pos);
 		if(next == -1) {
 			next = rulestr.size();
@@ -34,7 +56,6 @@ Rule Parser::getRule(string rulestr) {
 		pos = next+1;
 	}
 
-	return rule;
 }
 
 void Parser::pushFunction(Rule& rule, string funstr) {

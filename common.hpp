@@ -6,6 +6,8 @@
 #include <iostream>
 #include <cmath>
 #include "DGP/Common.hpp"
+#include <map>
+#include <stdlib.h> 
 
 using namespace DGP;
 using namespace std;

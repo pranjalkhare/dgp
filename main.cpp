@@ -17,20 +17,23 @@ usage(int argc, char * argv[])
 int
 main(int argc, char * argv[])
 {
+
   if (argc < 2)
     return usage(argc, argv);
-
+  srand(time(NULL));
   string filename(argv[1]);
   Parser parser(filename);
-  Modeler modeler(parser.parse());
+  map<string, RuleSet> rules;
+  parser.parse(rules);
+  Modeler modeler(rules);
 
-  for(int i=0; i<modeler.rules.size(); i++) {
-  	modeler.rules[i].print();
-  }
+  // for(int i=0; i<modeler.rules.size(); i++) {
+  	// modeler.rules[i].print();
+  // }
 
   Shape root;
-  root.type = modeler.rules[0].lhs;
-  root.rule = modeler.rules[0];
+  root.rule = modeler.rules["footprint"].rules[0].first;
+  root.type = "footprint";
   root.transform.fill(0);
   root.transform.set(0,0,1);
   root.transform.set(1,1,1);

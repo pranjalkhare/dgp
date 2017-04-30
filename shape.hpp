@@ -11,6 +11,7 @@ public:
 	AxisAlignedBox3 bbox;
 	Matrix4 transform;
 	Rule rule;
+	
 	vector<Shape> childs;
 
 	void print();

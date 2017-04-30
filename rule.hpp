@@ -10,6 +10,7 @@ public:
 	vector<string> functions;
 	vector<vector<string> > params;
 	vector<vector<string> > childs;
+	double weight;
 
 	void print() {
 		cout << "lhs= " << lhs << endl;
@@ -25,21 +26,14 @@ public:
 				cout << "\t\t" << j << "-> " << childs[i][j] << endl;
 			}
 		}
-		// cout << "params: " << endl;
-		// for(int i=1; i<=params.size(); i++) {
-		// 	cout << i << "-> " << endl;
-		// 	for(int j=0; j<params[i].size(); j++) {
-		// 		cout << "    " << j << ": " << params[i][j] << endl;
-		// 	}
-		// }
-		// cout << "childs: " << endl;
-		// for(int i=1; i<=childs.size(); i++) {
-		// 	cout << i << "-> " << endl;
-		// 	for(int j=0; j<childs[i].size(); j++) {
-		// 		cout << "    " << j << ": " << childs[i][j] << endl;
-		// 	}
-		// }
 	}
+};
+
+class RuleSet{
+public:
+	string lhs;
+	double total_weight;
+	vector<pair<Rule, double> > rules;
 };
 
 #endif
