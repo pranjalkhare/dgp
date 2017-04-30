@@ -93,7 +93,7 @@ void Modeler::SubDiv(Rule& rule, int index, Shape& shape) {
 	for(int i=0;i<rule.childs[index].size();++i) {
 		bbox.getHigh()[ind] += share*stod(rule.params[index][i+1]);
 		createChild(rule.childs[index][i],bbox,shape);
-		bbox.getLow() = bbox.getHigh();
+		bbox.getLow()[ind] = bbox.getHigh()[ind];
 	}
 	cout<<"SubDiv Completed"<<endl;
 }
@@ -130,7 +130,7 @@ void Modeler::Repeat(Rule& rule, int index, Shape& shape) {
 	for(int i=0;i<num;++i) {
 		bbox.getHigh()[ind] += share;
 		createChild(rule.childs[index][0],bbox,shape);
-		bbox.getLow() = bbox.getHigh();
+		bbox.getLow()[ind] = bbox.getHigh()[ind];
 	}
 	cout<<"Repeat Completed"<<endl;
 }
