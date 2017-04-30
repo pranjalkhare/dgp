@@ -140,6 +140,47 @@ void Modeler::Repeat(Rule& rule, int index, Shape& shape) {
 	AxisAlignedBox3 bbox = shape.bbox;
 	double s = stod(rule.params[index][1]);
 	int num = (bbox.getHigh()[ind]-bbox.getLow()[ind])/s;
+	double top = bbox.getHigh()[ind];
+	double share;
+	if(num==0){
+		share = (bbox.getHigh()[ind]-bbox.getLow()[ind]);
+		num=1;
+	}
+	else
+		share = s;
+	bbox.getHigh()[ind] = bbox.getLow()[ind];
+	cout<<num<<endl;
+	for(int i=0;i<num;++i) {
+		bbox.getHigh()[ind] += share;
+		createChild(rule.childs[index][0],bbox,shape);
+		bbox.getLow()[ind] = bbox.getHigh()[ind];
+	}
+	bbox.getHigh()[ind] = top;
+	string ss = "wall";
+	createChild(ss,bbox,shape);
+	cout<<"Repeat Completed"<<endl;
+}
+
+void Modeler::RepeatAbs(Rule& rule, int index, Shape& shape) {
+	if(rule.params[index].size() != 2 || rule.childs[index].size() != 1) {
+		cerr << "improper format of RepeatAbs function." << endl;
+		cerr << "usage: RepeatAbs(dimension,size){label}" << endl;
+		exit(0); 
+	}
+	int ind;
+	if(rule.params[index][0] == "X")
+		ind = 0;
+	else if(rule.params[index][0] == "Y")
+		ind = 1;
+	else if(rule.params[index][0] == "Z")
+		ind = 2;
+	else {
+		cerr << "Incorrect dimension specified" << endl;
+		exit(1);
+	}
+	AxisAlignedBox3 bbox = shape.bbox;
+	double s = stod(rule.params[index][1]);
+	int num = (bbox.getHigh()[ind]-bbox.getLow()[ind])/s;
 	double share;
 	if(num==0){
 		share = (bbox.getHigh()[ind]-bbox.getLow()[ind]);
@@ -154,7 +195,7 @@ void Modeler::Repeat(Rule& rule, int index, Shape& shape) {
 		createChild(rule.childs[index][0],bbox,shape);
 		bbox.getLow()[ind] = bbox.getHigh()[ind];
 	}
-	cout<<"Repeat Completed"<<endl;
+	cout<<"RepeatAbs Completed"<<endl;
 }
 
 void Modeler::getRenderable(vector<Renderable*>& renderables, Shape& shape) {
