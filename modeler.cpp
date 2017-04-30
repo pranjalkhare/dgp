@@ -29,9 +29,18 @@ void Modeler::createChild(string& label, AxisAlignedBox3& bbox, Shape& shape, bo
 	node.bbox.getLow() = node.bbox.getLow()-bbox.getLow();
 	node.bbox.getHigh() = node.bbox.getHigh()-bbox.getLow();
 	Matrix3 eye(1,0,0, 0,1,0, 0,0,1);
-	Matrix3 rot(0,0,0, 1,0,0, 0,1,0);
+	// Matrix3 rot(0,0,0, 1,0,0, 0,1,0);
+	Matrix3 rot(0,1,0, 1,0,0, 0,0,1);
 	if(flip) {
 		eye = rot;
+		double temp1 = node.bbox.getLow()[1];
+		double temp2 = node.bbox.getHigh()[1];
+		node.bbox.getLow()[1]=node.bbox.getLow()[0];
+		node.bbox.getHigh()[1]=node.bbox.getHigh()[0];
+		node.bbox.getLow()[0]=temp1;
+		node.bbox.getHigh()[0]=temp2;
+
+
 	}
 
 	Matrix4 transform(eye, bbox.getLow());
