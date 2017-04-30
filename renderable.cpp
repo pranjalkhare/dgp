@@ -65,6 +65,52 @@ void draw_bbox(Graphics::RenderSystem & rs, ColorRGBA const & plane_color, AxisA
   rs.popShader();
 }
 
+void draw_bbox_roof(Graphics::RenderSystem & rs, ColorRGBA const & plane_color, AxisAlignedBox3 bbox){
+	rs.pushShader();
+    rs.setShader(NULL);
+
+    rs.pushColorFlags();
+
+      rs.setColor(plane_color);
+      rs.beginPrimitive(Graphics::RenderSystem::Primitive::QUADS);
+        rs.sendVertex(bbox.getLow()[0],bbox.getLow()[1],bbox.getLow()[2]);
+        rs.sendVertex((bbox.getLow()[0]+bbox.getHigh()[0])/2.0,bbox.getLow()[1],bbox.getHigh()[2]);
+        rs.sendVertex((bbox.getLow()[0]+bbox.getHigh()[0])/2.0,bbox.getHigh()[1],bbox.getHigh()[2]);
+        rs.sendVertex(bbox.getLow()[0],bbox.getHigh()[1],bbox.getLow()[2]);
+
+        rs.sendVertex(bbox.getHigh()[0],bbox.getLow()[1],bbox.getLow()[2]);
+        rs.sendVertex((bbox.getLow()[0]+bbox.getHigh()[0])/2.0,bbox.getLow()[1],bbox.getHigh()[2]);
+        rs.sendVertex((bbox.getLow()[0]+bbox.getHigh()[0])/2.0,bbox.getHigh()[1],bbox.getHigh()[2]);
+        rs.sendVertex(bbox.getHigh()[0],bbox.getHigh()[1],bbox.getLow()[2]);
+
+        rs.sendVertex(bbox.getLow()[0],bbox.getLow()[1],bbox.getLow()[2]);
+        rs.sendVertex((bbox.getLow()[0]+bbox.getHigh()[0])/2.0,bbox.getLow()[1],bbox.getHigh()[2]);
+        rs.sendVertex((bbox.getLow()[0]+bbox.getHigh()[0])/2.0,bbox.getLow()[1],bbox.getHigh()[2]);
+        rs.sendVertex(bbox.getHigh()[0],bbox.getLow()[1],bbox.getLow()[2]);
+
+        rs.sendVertex(bbox.getLow()[0],bbox.getHigh()[1],bbox.getLow()[2]);
+        rs.sendVertex((bbox.getLow()[0]+bbox.getHigh()[0])/2.0,bbox.getHigh()[1],bbox.getHigh()[2]);
+        rs.sendVertex((bbox.getLow()[0]+bbox.getHigh()[0])/2.0,bbox.getHigh()[1],bbox.getHigh()[2]);
+        rs.sendVertex(bbox.getHigh()[0],bbox.getHigh()[1],bbox.getLow()[2]);
+
+        rs.sendVertex(bbox.getLow()[0],bbox.getLow()[1],bbox.getLow()[2]);
+        rs.sendVertex(bbox.getLow()[0],bbox.getHigh()[1],bbox.getLow()[2]);
+        rs.sendVertex(bbox.getHigh()[0],bbox.getHigh()[1],bbox.getLow()[2]);
+        rs.sendVertex(bbox.getHigh()[0],bbox.getLow()[1],bbox.getLow()[2]);
+
+        rs.sendVertex((bbox.getLow()[0]+bbox.getHigh()[0])/2.0,bbox.getLow()[1],bbox.getHigh()[2]);
+        rs.sendVertex((bbox.getLow()[0]+bbox.getHigh()[0])/2.0,bbox.getHigh()[1],bbox.getHigh()[2]);
+        rs.sendVertex((bbox.getLow()[0]+bbox.getHigh()[0])/2.0,bbox.getHigh()[1],bbox.getHigh()[2]);
+        rs.sendVertex((bbox.getLow()[0]+bbox.getHigh()[0])/2.0,bbox.getLow()[1],bbox.getHigh()[2]);
+
+
+      rs.endPrimitive();
+
+    rs.popColorFlags();
+
+  rs.popShader();
+}
+
 Roof::Roof(AxisAlignedBox3 bbox1) {
 	bbox = bbox1;
 }
@@ -77,7 +123,9 @@ void Roof::print() {
 }
 
 void Roof::draw(Graphics::RenderSystem & rs, ColorRGBA const & plane_color) {
-	draw_bbox(rs, ColorRGB(1.0, 0.0, 0.0), bbox);
+	
+	draw_bbox_roof(rs, ColorRGB(1.0, 0.0, 0.0), bbox);
+
 }
 
 
