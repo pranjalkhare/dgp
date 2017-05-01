@@ -34,7 +34,7 @@ Rule Modeler::getRule(string& s) {
 	return rule;
 }
 
-void Modeler::createChild(string& label, AxisAlignedBox3& bbox, Shape& shape, bool flip) {
+void Modeler::createChild(string& label, AxisAlignedBox3& bbox, Shape& shape, bool rotate, bool flip) {
 	cout<<"Creating "<<label<<endl;
 	Shape node;
 	node.bbox = bbox;
@@ -44,16 +44,32 @@ void Modeler::createChild(string& label, AxisAlignedBox3& bbox, Shape& shape, bo
 	Matrix3 eye(1,0,0, 0,1,0, 0,0,1);
 	// Matrix3 rot(0,0,0, 1,0,0, 0,1,0);
 	Matrix3 rot(0,1,0, 1,0,0, 0,0,1);
-	if(flip) {
+	Matrix3 fl(-1,0,0, 0,-1,0, 0,0,1);
+	if(!flip && rotate) {
 		eye = rot;
-		double temp1 = node.bbox.getLow()[1];
-		double temp2 = node.bbox.getHigh()[1];
-		node.bbox.getLow()[1]=node.bbox.getLow()[0];
-		node.bbox.getHigh()[1]=node.bbox.getHigh()[0];
-		node.bbox.getLow()[0]=temp1;
-		node.bbox.getHigh()[0]=temp2;
+		// double temp1 = node.bbox.getLow()[1];
+		// double temp2 = node.bbox.getHigh()[1];
+		// node.bbox.getLow()[1]=node.bbox.getLow()[0];
+		// node.bbox.getHigh()[1]=node.bbox.getHigh()[0];
+		// node.bbox.getLow()[0]=temp1;
+		// node.bbox.getHigh()[0]=temp2;
+	}
+	else if(flip && !rotate){
+		eye = fl;
+	}
+	else if(flip && rotate){
+		eye = fl*rot;
+	}
 
+	node.bbox.getLow()=eye*node.bbox.getLow();
+	node.bbox.getHigh()=eye*node.bbox.getHigh();
 
+	if(flip) {
+		Vector3 temp = node.bbox.getLow();
+		node.bbox.getLow()[0] = node.bbox.getHigh()[0];
+		node.bbox.getHigh()[0] = temp[0];
+		node.bbox.getLow()[1] = node.bbox.getHigh()[1];
+		node.bbox.getHigh()[1] = temp[1];
 	}
 
 	Matrix4 transform(eye, bbox.getLow());
@@ -71,7 +87,7 @@ void Modeler::createChild(string& label, AxisAlignedBox3& bbox, Shape& shape, bo
 }
 
 void Modeler::createChild(string& label, AxisAlignedBox3& bbox, Shape& shape) {
-	createChild(label, bbox, shape, false);
+	createChild(label, bbox, shape, false,false);
 }
 
 void Modeler::Comp(Rule& rule, int index, Shape& shape) {
@@ -81,13 +97,13 @@ void Modeler::Comp(Rule& rule, int index, Shape& shape) {
 	createChild(rule.childs[index][0],temp,shape);
 	temp = shape.bbox;
 	temp.getHigh()[0] = temp.getLow()[0];
-	createChild(rule.childs[index][1],temp,shape,true);
+	createChild(rule.childs[index][1],temp,shape,true,false);
 	temp = shape.bbox;
 	temp.getLow()[1] = temp.getHigh()[1];
-	createChild(rule.childs[index][2],temp,shape);
+	createChild(rule.childs[index][2],temp,shape,false,true);
 	temp = shape.bbox;
 	temp.getLow()[0] = temp.getHigh()[0];
-	createChild(rule.childs[index][3],temp,shape,true);
+	createChild(rule.childs[index][3],temp,shape,true,true);
 	cout<<"Comp Completed"<<endl;
 }
 

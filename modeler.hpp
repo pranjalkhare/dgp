@@ -14,7 +14,7 @@ public:
 	bool isRenderable(string& s);
 	Rule getRule(string& s);
 	void getRenderable(vector<Renderable*>& renderables, Shape& shape);
-	void createChild(string& label, AxisAlignedBox3 &bbox, Shape& shape, bool flip);
+	void createChild(string& label, AxisAlignedBox3 &bbox, Shape& shape,bool rotate, bool flip);
 	void createChild(string& label, AxisAlignedBox3 &bbox, Shape& shape);
 	void Comp(Rule& rule, int index, Shape& shape);
 	void SubDiv(Rule& rule, int index, Shape& shape);
