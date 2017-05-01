@@ -228,32 +228,36 @@ void Modeler::getRenderable(vector<Renderable*>& renderables, Shape& shape) {
 	Rule &rule = shape.rule;
 	// int index;
 	Vector3 stack = {0,0,0};
-	AxisAlignedBox3 stackbox;
+	AxisAlignedBox3 stackbox = shape.bbox;
 	for(int i=0; i<rule.functions.size(); i++) {
 		cout << "i=" << i << " ";
 		cout << "function=" << rule.functions[i] << endl;
 		if(rule.functions[i] == "S") {
-			stackbox = AxisAlignedBox3(stack, Vector3(stack[0]+stod(rule.params[i][0]),stack[1]+stod(rule.params[i][1]),stack[2]+stod(rule.params[i][2])));
+			stackbox = AxisAlignedBox3(Vector3(0,0,0), Vector3(stod(rule.params[i][0]),stod(rule.params[i][1]),stod(rule.params[i][2])));
 		} else if(rule.functions[i] == "T") {
 			stack[0] += stod(rule.params[i][0]);
 			stack[1] += stod(rule.params[i][1]);
 			stack[2] += stod(rule.params[i][2]);
-		} else if(rule.functions[i] == "C") {
-			AxisAlignedBox3 bbox = stackbox; // execute stack and set
-			for(int j=0;j<rule.childs[i].size();++j) {
-				createChild(rule.childs[i][j],bbox,shape);
-			}
-		} else if(rule.functions[i] == "Comp") {
-			Comp(rule,i,shape);
-		} else if(rule.functions[i] == "SubDiv") {
-			SubDiv(rule,i,shape);
-		} else if(rule.functions[i] == "Repeat") {
-			Repeat(rule,i,shape);
-		} else if(rule.functions[i] == "MSB") {
-			MSB(rule,i,shape,stackbox);
 		} else {
-			cerr << "unknown function: " << rule.functions[i] << endl;
-			exit(0);
+			stackbox.getLow() += shape.bbox.getLow()+Vector3(stack[0],stack[1],stack[2]);
+			stackbox.getHigh() += shape.bbox.getLow()+Vector3(stack[0],stack[1],stack[2]);
+			if(rule.functions[i] == "C") {
+				AxisAlignedBox3 bbox = stackbox; // execute stack and set
+				for(int j=0;j<rule.childs[i].size();++j) {
+					createChild(rule.childs[i][j],bbox,shape);
+			}
+			} else if(rule.functions[i] == "Comp") {
+				Comp(rule,i,shape);
+			} else if(rule.functions[i] == "SubDiv") {
+				SubDiv(rule,i,shape);
+			} else if(rule.functions[i] == "Repeat") {
+				Repeat(rule,i,shape);
+			} else if(rule.functions[i] == "MSB") {
+				MSB(rule,i,shape,stackbox);
+			} else {
+				cerr << "unknown function: " << rule.functions[i] << endl;
+				exit(0);
+			}
 		}
 	}
 

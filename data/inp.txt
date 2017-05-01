@@ -14,4 +14,4 @@ floors -> Repeat(Z,4){tiles}
 tiles -> Repeat(X,2r){tile}
 tile -> SubDiv(X,1r,1.2,1r){wall,windowspace,wall}:1
 // tile -> SubDiv(X,1r){wall}:1
-windowspace -> SubDiv(Z,1r,1,2r){wall,window,wall}
+windowspace -> SubDiv(Z,1r,1,2r){wall,window,wall} T(0,0,2) S(1.2,0.8,0.2) roof
